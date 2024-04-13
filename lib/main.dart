@@ -1,9 +1,11 @@
 import 'package:bluetooth_app/presentation/home/bluetooth_home_provider.dart';
 import 'package:bluetooth_app/presentation/home/bluetooth_home_screen.dart';
+import 'package:bluetooth_app/utils/dependency_injection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  setUpLocator();
   runApp(const MyApp());
 }
 

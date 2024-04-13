@@ -15,30 +15,37 @@ class BluetoothHomeProvider extends ChangeNotifier {
   final StopScanUseCase _stopScanUseCase = getIt<StopScanUseCase>();
 
   Future<void> connectToDevice(BluetoothDevice device) async {
+    notifyListeners();
     try {
       await _connectToDeviceUseCase(device);
     } catch (e) {
       print("exception occured in connectToDevice provider : $e");
     }
+    notifyListeners();
   }
 
   Future<void> disconnectFromDevice(BluetoothDevice device) async {
+    notifyListeners();
     try {
       await _disconnectFromDeviceUseCase(device);
     } catch (e) {
       print("exception occured in disconnectFromDevice provider : $e");
     }
+    notifyListeners();
   }
 
   Future<void> stopScan() async {
+    notifyListeners();
     try {
       await _stopScanUseCase();
     } catch (e) {
       print("exception occured in stopScan provider : $e ");
     }
+    notifyListeners();
   }
 
   Stream<List<ScanResult>> startScan() async* {
+    //  notifyListeners();
     try {
       // Stream<List<ScanResult>> scanResultList = _startScanUseCase();
       yield* _startScanUseCase();
@@ -51,5 +58,6 @@ class BluetoothHomeProvider extends ChangeNotifier {
       print("exception occured in strtScan provider : $e");
       yield <ScanResult>[]; // Return an empty list on error
     }
+    //  notifyListeners();
   }
 }

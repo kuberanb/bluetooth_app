@@ -45,7 +45,7 @@ class BluetoothDataSourceImpl extends BluetoothDataSource {
       await FlutterBluePlus.turnOn();
     }
 
-    FlutterBluePlus.startScan();
+    FlutterBluePlus.startScan(timeout: const Duration(seconds: 10));
     FlutterBluePlus.onScanResults.listen((event) {
       print("scanResult length : ${event.length}");
       if (event.isNotEmpty) {
