@@ -64,4 +64,71 @@ class BluetoothDataSourceImpl extends BluetoothDataSource {
       print("Exception Occured while stop scan bluetooth : ${e}");
     }
   }
+
+  Future<void> discoverServices(BluetoothDevice device) async {
+    try {
+      // Note: You must call discoverServices after every re-connection!
+      List<BluetoothService> services = await device.discoverServices();
+      services.forEach((service) {
+        // do something with service
+      });
+    } catch (e) {
+      print("exeception occured in discover series : $e");
+    }
+  }
+
+  Future<void> writeData(BluetoothDevice device) async {
+    List<BluetoothService> services = await device.discoverServices();
+
+    // Find the service and characteristic you want to communicate with
+    BluetoothService service = services.firstWhere(
+      (s) => s.uuid == Guid('your_service_uuid'),
+      orElse: () => throw Exception('Service not found'),
+    );
+    BluetoothCharacteristic characteristic = service.characteristics.firstWhere(
+      (c) => c.uuid == Guid('your_characteristic_uuid'),
+      orElse: () => throw Exception('Characteristic not found'),
+    );
+
+    // Write data
+    await characteristic.write([0x01, 0x02, 0x03], withoutResponse: true);
+  }
+
+  Future<void> readData(BluetoothDevice device) async {
+    List<BluetoothService> services = await device.discoverServices();
+
+    // Find the service and characteristic you want to communicate with
+    BluetoothService service = services.firstWhere(
+      (s) => s.uuid == Guid('your_service_uuid'),
+      orElse: () => throw Exception('Service not found'),
+    );
+    BluetoothCharacteristic characteristic = service.characteristics.firstWhere(
+      (c) => c.uuid == Guid('your_characteristic_uuid'),
+      orElse: () => throw Exception('Characteristic not found'),
+    );
+
+    List<int> value = await characteristic.read();
+  }
+
+  Future<void> listenToNotifications(BluetoothDevice device) async {
+    List<BluetoothService> services = await device.discoverServices();
+
+    // Find the service and characteristic you want to communicate with
+    BluetoothService service = services.firstWhere(
+      (s) => s.uuid == Guid('your_service_uuid'),
+      orElse: () => throw Exception('Service not found'),
+    );
+    BluetoothCharacteristic characteristic = service.characteristics.firstWhere(
+      (c) => c.uuid == Guid('your_characteristic_uuid'),
+      orElse: () => throw Exception('Characteristic not found'),
+    );
+
+    // Listen for notifications
+    await characteristic.setNotifyValue(true);
+
+    characteristic.value.listen((data) {
+      // Data received from notifications
+      print('Received: $data');
+    });
+  }
 }
